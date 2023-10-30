@@ -40,7 +40,7 @@ public class StudentAccountService {
     }
 
     public void removeStudent(Long id) {
-        if (heapOfStudents.containsKey(id)) {
+        if (heapOfStudents.containsKey(id) || heapOfStudents.isEmpty()) {
             log.info("Student with id {} was removed", id);
             heapOfStudents.remove(id);
         } else {
