@@ -52,7 +52,7 @@ public class StudentAccountService {
 
     @ShellMethod(key = "r")
     public void removeStudent(Long id) {
-        if (heapOfStudents.containsKey(id) || heapOfStudents.isEmpty()) {
+        if (heapOfStudents.containsKey(id) && !heapOfStudents.isEmpty()) {
             log.info("Student with id {} was removed", id);
             heapOfStudents.remove(id);
         } else {
