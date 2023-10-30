@@ -2,6 +2,7 @@ package com.example.Student.accounting.service;
 
 import com.example.Student.accounting.entity.Student;
 import com.example.Student.accounting.exceptions.ObjectNotFoundException;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
@@ -10,20 +11,32 @@ import java.util.Map;
 
 @Slf4j
 @Component
+@Data
 @RequiredArgsConstructor
 public class StudentAccountService {
+
+    private Long studentId = 0L;
 
     private final Map<Long, Student> heapOfStudents = new HashMap<>();
 
     public void createStudent(Integer amount) {
         for (int i = 0; i < amount; i++) {
-            addStudent(new Student((long) i, (i + "aaaa"), (i + "bbbbb"), (short) (18 + i)));
+            addStudent(new Student(studentId++, (i + "aaaa"), (i + "bbbbb"), (short) (18 + i)));
         }
     }
 
     public void addStudent(Student student) {
         log.info("Student with id {} was added", student.getId());
         heapOfStudents.put(student.getId(), student);
+    }
+
+    public void printStudentsList() {
+        for (Map.Entry<Long, Student> i: heapOfStudents.entrySet()) {
+            System.out.println("student id: " + i.getKey());
+            System.out.println("Student Firstname" + i.getValue().getFirstName()
+                    + "Student Lastname " + i.getValue().getLastName()
+                    + "Age is " + i.getValue().getAge());
+        }
     }
 
     public void removeStudent(Long id) {
