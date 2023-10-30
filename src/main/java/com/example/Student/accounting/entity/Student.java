@@ -15,5 +15,5 @@ public class Student {
 
     private String lastName;
 
-    private Short age;
+    private Byte age;
 }

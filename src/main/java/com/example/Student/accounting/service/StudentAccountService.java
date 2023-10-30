@@ -4,14 +4,18 @@ import com.example.Student.accounting.entity.Student;
 import com.example.Student.accounting.exceptions.ObjectNotFoundException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.shell.standard.ShellComponent;
+import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellOption;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-@Component
 @Data
+@Component
+@ShellComponent
 @RequiredArgsConstructor
 public class StudentAccountService {
 
@@ -19,17 +23,24 @@ public class StudentAccountService {
 
     private final Map<Long, Student> heapOfStudents = new HashMap<>();
 
-    public void createStudent(Integer amount) {
+    public Student createStudent(String firstName, String lastname, Byte Age) {
+        return new Student(studentId++, firstName, lastname, Age);
+    }
+
+    @ShellMethod(key = "c")
+    public void createStudent(@ShellOption(value = "a") Integer amount) {
         for (int i = 0; i < amount; i++) {
-            addStudent(new Student(studentId++, (i + "aaaa"), (i + "bbbbb"), (short) (18 + i)));
+            addStudent(createStudent((i + "aaaa"), (i + "bbbbb"), (byte) (18 + i)));
         }
     }
 
-    public void addStudent(Student student) {
+    @ShellMethod(key = "a")
+    public void addStudent(@ShellOption(value = "s") Student student) {
         log.info("Student with id {} was added", student.getId());
         heapOfStudents.put(student.getId(), student);
     }
 
+    @ShellMethod(key = "t")
     public void printStudentsList() {
         for (Map.Entry<Long, Student> i : heapOfStudents.entrySet()) {
             System.out.println("student id: " + i.getKey());
@@ -39,6 +50,7 @@ public class StudentAccountService {
         }
     }
 
+    @ShellMethod(key = "r")
     public void removeStudent(Long id) {
         if (heapOfStudents.containsKey(id) || heapOfStudents.isEmpty()) {
             log.info("Student with id {} was removed", id);
@@ -49,6 +61,7 @@ public class StudentAccountService {
         }
     }
 
+    @ShellMethod(key = "p")
     public void purgeHeap() {
         log.info("Faculty was purged!");
         heapOfStudents.clear();
