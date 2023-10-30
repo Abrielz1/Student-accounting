@@ -31,7 +31,7 @@ public class StudentAccountService {
     }
 
     public void printStudentsList() {
-        for (Map.Entry<Long, Student> i: heapOfStudents.entrySet()) {
+        for (Map.Entry<Long, Student> i : heapOfStudents.entrySet()) {
             System.out.println("student id: " + i.getKey());
             System.out.println("Student Firstname" + i.getValue().getFirstName()
                     + "Student Lastname " + i.getValue().getLastName()
