@@ -1,6 +1,8 @@
 package com.example.Student.accounting.service;
 
 import com.example.Student.accounting.entity.Student;
+import com.example.Student.accounting.entity.StudentEvent;
+import com.example.Student.accounting.event.StudentEventPublisher;
 import com.example.Student.accounting.exceptions.ObjectNotFoundException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,8 @@ import java.util.Map;
 @ShellComponent
 @RequiredArgsConstructor
 public class StudentAccountService {
+
+    private final StudentEventPublisher publisher;
 
     private Long studentId = 1L;
 
@@ -42,8 +46,8 @@ public class StudentAccountService {
     }
 
     private void addStudent(Student student) {
-        log.info("Student with id {} was added", student.getId());
         heapOfStudents.put(student.getId(), student);
+        publisher.publishStudentEvent(new StudentEvent(this, student).getMessage());
     }
 
     @ShellMethod(key = "print")
@@ -59,7 +63,7 @@ public class StudentAccountService {
     @ShellMethod(key = "rem")
     public void removeStudent(Long id) {
         if (heapOfStudents.containsKey(id) && !heapOfStudents.isEmpty()) {
-            log.info("Student with id {} was removed", id);
+            publisher.publishStudentEvent(new StudentEvent(this, heapOfStudents.get(id)).getMessage());
             heapOfStudents.remove(id);
         } else {
             log.warn("Student with id {} was not found!", id);
